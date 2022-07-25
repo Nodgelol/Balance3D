@@ -87,7 +87,7 @@ void APlayerBall::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Oth
 
 void APlayerBall::MoveRight(float Val)
 {
-	const FVector Torque = FVector(-1.5f * Val * RollTorque, 0.f, 0.f);
+	const FVector Torque = FVector(-1.f * Val * RollTorque, 0.f, 0.f);
 	Ball->AddTorqueInRadians(Torque);
 }
 

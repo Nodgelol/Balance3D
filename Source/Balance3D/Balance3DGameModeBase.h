@@ -9,9 +9,11 @@
 /**
  * 
  */
-UCLASS()
-class BALANCE3D_API ABalance3DGameModeBase : public AGameModeBase
+UCLASS(minimalapi)
+class ABalance3DGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	void ABalance3DGameMode();
 };

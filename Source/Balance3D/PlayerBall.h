@@ -49,6 +49,12 @@ protected:
 	/** Called to move ball forwards and backwards */
 	void MoveForward(float Val);
 
+	/** Called to look up and down */
+	void LookUp(float val);
+
+	/** Called to look left and right */
+	void Lookright(float val);
+
 	/** Handle jump action. */
 	void Jump();
 
