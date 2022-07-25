@@ -2,12 +2,24 @@
 
 
 #include "Checkpoint.h"
+#include "Components/BoxComponent.h"
+#include "Engine/Enginge.h"
+
+
 
 // Sets default values
 ACheckpoint::ACheckpoint()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	CollisionBox = CreateDefaultSubObject<UBoxComponent>(TEXT("BoxComponent"));
+	CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
+	CollisionBox->SetCOllisionProfilName("Trigger");
+	RootComponent = CollisionBox;
+
+	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnOverlapBegin);
+	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &ACheckpoint::OnOverlapEnd);
 
 }
 
@@ -25,3 +37,18 @@ void ACheckpoint::Tick(float DeltaTime)
 
 }
 
+
+void ACheckpoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Fuction Called");
+
+
+}
+
+
+void ACheckpoint::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Overlap End Fuction Called");
+
+
+}
