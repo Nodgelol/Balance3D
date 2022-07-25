@@ -2,107 +2,104 @@
 
 
 #include "PlayerBall.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Camera/CameraComponent.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/InputComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Engine/CollisionProfile.h"
-#include "Engine/StaticMesh.h"
 
 // Sets default values
 APlayerBall::APlayerBall()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	//PrimaryActorTick.bCanEverTick = true;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> BallMesh(TEXT("/Game/PlayerBall/PlayerBall.PlayerBall"));
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
 
-	// Create mesh component for the ball
-	Ball = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ball0"));
-	Ball->SetStaticMesh(BallMesh.Object);
-	Ball->BodyInstance.SetCollisionProfileName(UCollisionProfile::PhysicsActor_ProfileName);
-	Ball->SetSimulatePhysics(true);
-	Ball->SetAngularDamping(0.1f);
-	Ball->SetLinearDamping(0.1f);
-	Ball->BodyInstance.MassScale = 3.5f;
-	Ball->BodyInstance.MaxAngularVelocity = 800.0f;
-	Ball->SetNotifyRigidBodyCollision(true);
-	RootComponent = Ball;
+	// Character Setup
+	GetCapsuleComponent()->InitCapsuleSize(50.0f, 50.0f); // Capsule Size
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
-	// Create a camera boom attached to the root (ball)
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm0"));
-	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->bDoCollisionTest = false;
-	// SpringArm->SetUsingAbsoluteRotation(false); // Rotation of the ball should not affect rotation of boom
-	SpringArm->bUsePawnControlRotation = true;
-	SpringArm->SetRelativeRotation(FRotator(-45.f, 0.f, 0.f));
-	SpringArm->TargetArmLength = 600.f;
-	SpringArm->bEnableCameraLag = false;
-	SpringArm->CameraLagSpeed = 3.f;
+	// Character Movement Setup
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
+	GetCharacterMovement()->JumpZVelocity = 600.0f;
+	GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->GroundFriction = 1.0f;
+	GetCharacterMovement()->bRequestedMoveUseAcceleration = true;
 
-	// Create a camera and attach to boom
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera0"));
-	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
-	Camera->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
+	// CameraBoom Setup
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 600.0f;
+	CameraBoom->bUsePawnControlRotation = true;
 
-	// Set up forces
-	RollTorque = 50000000.0f;
-	JumpImpulse = 350000.0f;
-	bCanJump = true; // Start being able to jump
-	bDead = false; // Player should be alive ;)
+	// Camera Setup
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->bUsePawnControlRotation = false;
+
+	// Character Status Setup
+	bDead = false;
 }
 
 // Called when the game starts or when spawned
 void APlayerBall::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
-//void APlayerBall::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
+void APlayerBall::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	ratio = 50.0f;
+	horizontalVel = FVector(GetCharacterMovement()->Velocity.X, GetCharacterMovement()->Velocity.Y, 0.0f);
+	horizontalSpeed = horizontalVel.Size();
+
+	if (horizontalSpeed < 0.0f) {
+		rotationAmount = FRotator(GetCharacterMovement()->GetLastUpdateRotation()).Vector().Size();
+		rotationAmount += (horizontalSpeed / (PI * ratio) * GetWorld()->DeltaTimeSeconds);
+
+		FRotator rotation = horizontalVel.GetSafeNormal().Rotation();
+	}
+	else if (horizontalSpeed > 0.0f) {
+
+	}
+	else {
+
+	}
+
+}
 
 // Called to bind functionality to input
 void APlayerBall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	// set up gameplay key bindings
-	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerBall::MoveRight);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerBall::MoveForward);
-
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &APlayerBall::Jump);
+	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerBall::MoveRight);
 }
 
-void APlayerBall::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+void APlayerBall::MoveForward(float Axis)
 {
-	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	if (!bDead) {
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	bCanJump = true;
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Axis);
+	}
 }
 
-void APlayerBall::MoveRight(float Val)
+void APlayerBall::MoveRight(float Axis)
 {
-	const FVector Torque = FVector(-1.f * Val * RollTorque, 0.f, 0.f);
-	Ball->AddTorqueInRadians(Torque);
-}
+	if (!bDead) {
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-void APlayerBall::MoveForward(float Val)
-{
-	const FVector Torque = FVector(0.f, Val * RollTorque, 0.f);
-	Ball->AddTorqueInRadians(Torque);
-}
-
-void APlayerBall::Jump()
-{
-	if (bCanJump)
-	{
-		const FVector Impulse = FVector(0.f, 0.f, JumpImpulse);
-		Ball->AddImpulse(Impulse);
-		bCanJump = false;
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, Axis);
 	}
 }
