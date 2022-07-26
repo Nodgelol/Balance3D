@@ -35,6 +35,11 @@ ABall::ABall()
 	// Setup Ball Settings
 	StaticMesh->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -50.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
 	StaticMesh->SetSimulatePhysics(true);
+
+
+	// Others
+	bCanJump = true;
+	JumpImpulse = 35000.f;
 }
 
 // Called to bind functionality to input
@@ -84,11 +89,17 @@ void ABall::Turn(float value)
 
 void ABall::Jump()
 {
-	// How to stop jumping infinite?
+	if (bCanJump) {
+		// Jump
+		const FVector Impulse = FVector(0.f, 0.f, JumpImpulse);
+		StaticMesh->AddImpulse(Impulse);
+		bCanJump = false;
+	}
+}
 
-	// Movement
-	FVector ForceVector;
-	ForceVector.Z = ForceVector.Z + 600.f;
-	FName BoneName = TEXT("None");
-	StaticMesh->AddImpulse(ForceVector, BoneName, true);
+void ABall::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+
+	bCanJump = true;
 }
