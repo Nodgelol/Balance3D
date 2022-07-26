@@ -27,6 +27,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UCameraComponent* CameraComponent;
 
+	bool bCanJump;
+	float JumpImpulse;
 
 public:
 	// Called to bind functionality to input
@@ -36,4 +38,5 @@ public:
 	void LookUp(float value);
 	void Turn(float value);
 	void Jump();
+	virtual void NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 };
