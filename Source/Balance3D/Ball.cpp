@@ -10,9 +10,9 @@
 // Sets default values
 ABall::ABall()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-	
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Player Possession
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
@@ -21,7 +21,7 @@ ABall::ABall()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm Component"));
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
-	
+
 	// Attachments
 	RootComponent = SceneComponent;
 	StaticMesh->SetupAttachment(SceneComponent);
@@ -33,14 +33,15 @@ ABall::ABall()
 	SpringArm->TargetArmLength = 600.f;
 
 	// Setup Ball Settings
-	StaticMesh->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -50.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
 	StaticMesh->SetSimulatePhysics(true);
 
 
 	// Others
-	bCanJump = true;
+	jumping = false;
 	JumpImpulse = 35000.f;
+	MovementSpeed = 600.f;
 }
+
 
 // Called to bind functionality to input
 void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -52,15 +53,17 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABall::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &ABall::LookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &ABall::Turn);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABall::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ABall::StopJump);
 }
 
 void ABall::MoveForward(float value)
 {
 	// Movement
 	FVector ForceVector = CameraComponent->GetForwardVector();
-	ForceVector.X = ForceVector.X * value * 600.f;
-	ForceVector.Y = ForceVector.Y * value * 600.f;
+	ForceVector.X = ForceVector.X * value * MovementSpeed;
+	ForceVector.Y = ForceVector.Y * value * MovementSpeed;
 	FName BoneName = TEXT("None");
 	StaticMesh->AddForce(ForceVector, BoneName, true);
 }
@@ -69,8 +72,8 @@ void ABall::MoveRight(float value)
 {
 	// Movement
 	FVector ForceVector = CameraComponent->GetRightVector();
-	ForceVector.X = ForceVector.X * value * 600.f;
-	ForceVector.Y = ForceVector.Y * value * 600.f;
+	ForceVector.X = ForceVector.X * value * MovementSpeed;
+	ForceVector.Y = ForceVector.Y * value * MovementSpeed;
 	FName BoneName = TEXT("None");
 	StaticMesh->AddForce(ForceVector, BoneName, true);
 }
@@ -89,17 +92,16 @@ void ABall::Turn(float value)
 
 void ABall::Jump()
 {
-	if (bCanJump) {
+	if (!jumping)
+	{
 		// Jump
 		const FVector Impulse = FVector(0.f, 0.f, JumpImpulse);
 		StaticMesh->AddImpulse(Impulse);
-		bCanJump = false;
 	}
+	jumping = true;
 }
 
-void ABall::NotifyHit(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+void ABall::StopJump()
 {
-	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-
-	bCanJump = true;
+	jumping = false;
 }

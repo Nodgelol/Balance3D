@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "Ball.generated.h"
+#include "GameFramework/Character.h"
+#include "Ball_Character.generated.h"
 
 UCLASS()
-class BALANCE3D_API ABall : public APawn
+class BALANCE3D_API ABall_Character : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	ABall();
+	// Sets default values for this character's properties
+	ABall_Character();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class USceneComponent* SceneComponent;
+		class UCapsuleComponent* Capsule;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* StaticMesh;
@@ -25,7 +25,7 @@ public:
 		class USpringArmComponent* SpringArm;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UCameraComponent* CameraComponent;
+		class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool jumping;
@@ -36,13 +36,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MovementSpeed;
 
-public:
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void LookUp(float value);
 	void Turn(float value);
 	void Jump();
-	void StopJump();
+	void CheckJump();
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 };

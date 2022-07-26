@@ -5,8 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
 
-
-
 // Sets default values
 ACheckpoint::ACheckpoint()
 {
@@ -37,14 +35,12 @@ void ACheckpoint::Tick(float DeltaTime)
 
 }
 
-
 void ACheckpoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, "Overlap Begin Fuction Called");
 
 
 }
-
 
 void ACheckpoint::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
