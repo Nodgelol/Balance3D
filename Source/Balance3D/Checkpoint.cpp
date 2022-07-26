@@ -13,9 +13,9 @@ ACheckpoint::ACheckpoint()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	CollisionBox = CreateDefaultSubObject<UBoxComponent>(TEXT("BoxComponent"));
 	CollisionBox->SetBoxExtent(FVector(32.f, 32.f, 32.f));
-	CollisionBox->SetCollisionProfileName("Trigger");
+	CollisionBox->SetCOllisionProfilName("Trigger");
 	RootComponent = CollisionBox;
 
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnOverlapBegin);
