@@ -32,6 +32,8 @@ void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AAct
 				teleporting = true;
 
 				character->Teleporte(otherTele->GetActorLocation());
+				//character->MatChange(34, Materials);
+
 
 			}
 		}
