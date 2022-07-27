@@ -27,6 +27,7 @@ ABall::ABall()
 	StaticMesh->SetupAttachment(SceneComponent);
 	SpringArm->SetupAttachment(StaticMesh);
 	CameraComponent->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+	
 
 	// Setup Camera Settings
 	SpringArm->bUsePawnControlRotation = true;
@@ -104,4 +105,14 @@ void ABall::Jump()
 void ABall::StopJump()
 {
 	jumping = false;
+}
+
+void ABall::Teleporte(FVector dahin)
+{
+	StaticMesh->SetWorldLocation(dahin);
+}
+
+void ABall::Rotate(const FQuat &sorum)
+{
+	StaticMesh->SetWorldRotation(sorum);
 }

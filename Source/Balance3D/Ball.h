@@ -45,4 +45,6 @@ public:
 	void Turn(float value);
 	void Jump();
 	void StopJump();
+	void Teleporte(FVector value);
+	void Rotate(const FQuat &value);
 };

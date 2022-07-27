@@ -1,0 +1,56 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MyTeleporterBox.h"
+
+
+AMyTeleporterBox::AMyTeleporterBox()
+{
+	OnActorBeginOverlap.AddDynamic(this, &AMyTeleporterBox::EnterTeleporter);
+	teleporting = false;
+
+}
+
+void AMyTeleporterBox::BeginPlay()
+{
+
+	Super::BeginPlay();
+
+}
+
+void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AActor* otherActor)
+{
+	if (otherActor && otherActor != this)
+	{
+		if (otherTele)
+		{
+
+			ABall* character = Cast<ABall>(otherActor);
+			if (character && !otherTele->teleporting)
+			{
+				teleporting = true;
+
+				    
+				//character->GetController()->SetControlRotation(character->GetActorRotation());
+				//character->SetActorRelativeLocation(otherTele->GetActorLocation());
+				character->Teleporte(otherTele->GetActorLocation());
+				//character->Rotate(otherTele->GetActorRotation());
+				//character->SetActorLocation(otherTele->GetActorLocation());
+				//character->SetActorLocationAndRotation(otherTele->GetActorLocation(), otherTele->GetActorRotation(),);
+
+
+			}
+		}
+	}
+}
+
+void AMyTeleporterBox::ExitTeleporter(class AActor* overlappedActor, class AActor* otherActor)
+{
+	if (otherActor && otherActor != this)
+	{
+		if (otherTele && !teleporting)
+		{
+			otherTele->teleporting = false;
+		}
+	}
+}
