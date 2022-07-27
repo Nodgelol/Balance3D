@@ -43,4 +43,5 @@ public:
 	void MoveRight(float value);
 	void LookUp(float value);
 	void Turn(float value);
+	void Teleporte(FVector value);
 };
