@@ -8,8 +8,8 @@
 #include "MyTeleporterBox.generated.h"
 
 
-	UCLASS()
-	class BALANCE3D_API AMyTeleporterBox : public ATriggerBox
+UCLASS()
+class BALANCE3D_API AMyTeleporterBox : public ATriggerBox
 {
 	GENERATED_BODY()
 
