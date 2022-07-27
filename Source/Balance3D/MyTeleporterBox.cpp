@@ -1,13 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MyTeleporterBox.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+
 
 
 AMyTeleporterBox::AMyTeleporterBox()
 {
 	OnActorBeginOverlap.AddDynamic(this, &AMyTeleporterBox::EnterTeleporter);
 	OnActorEndOverlap.AddDynamic(this, &AMyTeleporterBox::ExitTeleporter);
+
 	teleporting = false;
 
 }
@@ -32,7 +34,7 @@ void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AAct
 				teleporting = true;
 
 				character->Teleporte(otherTele->GetActorLocation());
-				//character->MatChange(34, Materials);
+				
 
 
 			}
@@ -42,6 +44,9 @@ void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AAct
 
 void AMyTeleporterBox::ExitTeleporter(class AActor* overlappedActor, class AActor* otherActor)
 {
+	
+	UGameplayStatics::PlaySoundAtLocation(this, dbzTeleport, GetActorLocation());
+
 	if (otherActor && otherActor != this)
 	{
 		if (otherTele && !teleporting)
@@ -49,4 +54,6 @@ void AMyTeleporterBox::ExitTeleporter(class AActor* overlappedActor, class AActo
 			otherTele->teleporting = false;
 		}
 	}
+
+
 }

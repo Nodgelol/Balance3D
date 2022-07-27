@@ -16,6 +16,9 @@
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category = "Sound")
+		class USoundBase* dbzTeleport;
+
 public:
 	AMyTeleporterBox();
 
@@ -30,9 +33,6 @@ public:
 
 	UPROPERTY()
 		bool teleporting;
-
-	
-		
 
 
 };
