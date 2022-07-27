@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Ball.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Checkpoint.generated.h"
-
 
 UCLASS()
 class BALANCE3D_API ACheckpoint : public AActor

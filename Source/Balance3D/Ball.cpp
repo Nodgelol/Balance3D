@@ -27,7 +27,6 @@ ABall::ABall()
 	StaticMesh->SetupAttachment(SceneComponent);
 	SpringArm->SetupAttachment(StaticMesh);
 	CameraComponent->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
-	
 
 	// Setup Camera Settings
 	SpringArm->bUsePawnControlRotation = true;
@@ -36,10 +35,7 @@ ABall::ABall()
 	// Setup Ball Settings
 	StaticMesh->SetSimulatePhysics(true);
 
-
 	// Others
-	jumping = false;
-	JumpImpulse = 35000.f;
 	MovementSpeed = 600.f;
 }
 
@@ -54,9 +50,6 @@ void ABall::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABall::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &ABall::LookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &ABall::Turn);
-
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABall::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ABall::StopJump);
 }
 
 void ABall::MoveForward(float value)
@@ -89,30 +82,4 @@ void ABall::Turn(float value)
 {
 	// Camera Left and Right
 	AddControllerYawInput(value);
-}
-
-void ABall::Jump()
-{
-	if (!jumping)
-	{
-		// Jump
-		const FVector Impulse = FVector(0.f, 0.f, JumpImpulse);
-		StaticMesh->AddImpulse(Impulse);
-	}
-	jumping = true;
-}
-
-void ABall::StopJump()
-{
-	jumping = false;
-}
-
-void ABall::Teleporte(FVector dahin)
-{
-	StaticMesh->SetWorldLocation(dahin);
-}
-
-void ABall::Rotate(const FQuat &sorum)
-{
-	StaticMesh->SetWorldRotation(sorum);
 }
