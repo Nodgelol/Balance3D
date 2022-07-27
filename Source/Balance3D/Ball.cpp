@@ -84,3 +84,8 @@ void ABall::Turn(float value)
 	// Camera Left and Right
 	AddControllerYawInput(value);
 }
+
+void ABall::Teleporte(FVector dahin)
+{
+	StaticMesh->SetWorldLocation(dahin);
+}
