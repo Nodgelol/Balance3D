@@ -27,6 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Teleporter")
 		AMyTeleporterBox* otherTele;
+
 	UPROPERTY()
 		bool teleporting;
 

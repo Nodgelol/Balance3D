@@ -85,7 +85,7 @@ void ABall::Turn(float value)
 	AddControllerYawInput(value);
 }
 
-void ABall::Teleporte(FVector dahin)
+void ABall::Teleporte(FVector value)
 {
-	StaticMesh->SetWorldLocation(dahin);
+	StaticMesh->SetWorldLocation(value);
 }

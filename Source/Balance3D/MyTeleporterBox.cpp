@@ -7,6 +7,7 @@
 AMyTeleporterBox::AMyTeleporterBox()
 {
 	OnActorBeginOverlap.AddDynamic(this, &AMyTeleporterBox::EnterTeleporter);
+	OnActorEndOverlap.AddDynamic(this, &AMyTeleporterBox::ExitTeleporter);
 	teleporting = false;
 
 }
