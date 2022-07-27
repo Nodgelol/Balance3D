@@ -17,7 +17,7 @@ ABall::ABall()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	// Creating Components
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component"));
+	SceneComponent = 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm Component"));
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
