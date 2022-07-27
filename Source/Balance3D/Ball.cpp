@@ -105,3 +105,8 @@ void ABall::StopJump()
 {
 	jumping = false;
 }
+
+void ABall::Teleporte(FVector dahin)
+{
+	StaticMesh->SetWorldLocation(dahin);
+}

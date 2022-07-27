@@ -45,4 +45,5 @@ public:
 	void Turn(float value);
 	void Jump();
 	void StopJump();
+	void Teleporte(FVector value);
 };
