@@ -30,14 +30,7 @@ void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AAct
 			{
 				teleporting = true;
 
-				    
-				//character->GetController()->SetControlRotation(character->GetActorRotation());
-				//character->SetActorRelativeLocation(otherTele->GetActorLocation());
 				character->Teleporte(otherTele->GetActorLocation());
-				//character->Rotate(otherTele->GetActorRotation());
-				//character->SetActorLocation(otherTele->GetActorLocation());
-				//character->SetActorLocationAndRotation(otherTele->GetActorLocation(), otherTele->GetActorRotation(),);
-
 
 			}
 		}
