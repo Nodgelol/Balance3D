@@ -30,6 +30,9 @@ public:
 	UPROPERTY()
 		bool teleporting;
 
+	
+		
+
 
 
 };

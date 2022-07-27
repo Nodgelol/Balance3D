@@ -88,4 +88,5 @@ void ABall::Turn(float value)
 void ABall::Teleporte(FVector dahin)
 {
 	StaticMesh->SetWorldLocation(dahin);
+	
 }
