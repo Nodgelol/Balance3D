@@ -28,12 +28,6 @@ public:
 		class UCameraComponent* CameraComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool jumping;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float JumpImpulse;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MovementSpeed;
 
 public:
@@ -43,6 +37,4 @@ public:
 	void MoveRight(float value);
 	void LookUp(float value);
 	void Turn(float value);
-	void Jump();
-	void StopJump();
 };
