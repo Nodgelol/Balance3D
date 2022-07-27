@@ -43,6 +43,4 @@ public:
 	void MoveRight(float value);
 	void LookUp(float value);
 	void Turn(float value);
-	void Jump();
-	void StopJump();
 };
