@@ -23,8 +23,6 @@ void AMyTeleporterBox::BeginPlay()
 
 void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AActor* otherActor)
 {
-	
-
 	if (otherActor && otherActor != this)
 	{
 		if (otherTele)
@@ -46,9 +44,6 @@ void AMyTeleporterBox::EnterTeleporter(class AActor* overlappedActor, class AAct
 
 void AMyTeleporterBox::ExitTeleporter(class AActor* overlappedActor, class AActor* otherActor)
 {
-	
-	//UGameplayStatics::PlaySoundAtLocation(this, dbzTeleport, GetActorLocation());
-
 	if (otherActor && otherActor != this)
 	{
 		if (otherTele && !teleporting)
@@ -56,6 +51,4 @@ void AMyTeleporterBox::ExitTeleporter(class AActor* overlappedActor, class AActo
 			otherTele->teleporting = false;
 		}
 	}
-
-
 }
